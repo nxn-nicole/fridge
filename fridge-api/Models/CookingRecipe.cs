@@ -10,7 +10,8 @@ public class CookingRecipe
 
     public ICollection<RecipeStep> Steps { get; set; } = new List<RecipeStep>();
 
-    public ICollection<RecipeCategory> Categories { get; set; } = new List<RecipeCategory>();
+    public int? CategoryId { get; set; }
+    public Category? Category { get; set; }
 
     public ICollection<RecipePicture> Pictures { get; set; } = new List<RecipePicture>();
 

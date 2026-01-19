@@ -13,12 +13,22 @@ public class GetAllCategoriesQuery
         _db = db;
     }
 
-    public async Task<IReadOnlyList<CategorySummary>> ExecuteAsync(CancellationToken ct)
+    public async Task<IReadOnlyList<CategoryDto>> ExecuteAsync(CancellationToken ct)
     {
         return await _db.Categories
             .AsNoTracking()
             .OrderBy(category => category.Title)
-            .Select(category => new CategorySummary(category.Id, category.Title))
+            .Select(category => new CategoryDto
+            {
+                Id = category.Id,
+                Title = category.Title,
+            })
             .ToListAsync(ct);
     }
+}
+
+public class CategoryDto
+{
+    public int Id { get; set; }
+    public string Title { get; set; }
 }

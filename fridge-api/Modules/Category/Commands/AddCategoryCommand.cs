@@ -1,7 +1,10 @@
 using fridge_api.Data;
 using fridge_api.Modules.Category;
+using Microsoft.EntityFrameworkCore;
 
 namespace fridge_api.Modules.Category.Commands;
+
+public sealed record AddCategoryRequest(string Title);
 
 public class AddCategoryCommand
 {
