@@ -1,0 +1,19 @@
+namespace fridge_api.Models;
+
+public class CookingRecipe
+{
+    public int Id { get; set; }
+
+    public string Title { get; set; } = "";
+
+    public ICollection<IngredientItem> Ingredients { get; set; } = new List<IngredientItem>();
+
+    public ICollection<RecipeStep> Steps { get; set; } = new List<RecipeStep>();
+
+    public ICollection<RecipeCategory> Categories { get; set; } = new List<RecipeCategory>();
+
+    public ICollection<RecipePicture> Pictures { get; set; } = new List<RecipePicture>();
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+}
