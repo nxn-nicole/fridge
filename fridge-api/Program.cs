@@ -1,5 +1,6 @@
 using fridge_api.Data;
 using fridge_api.Modules.Category;
+using fridge_api.Modules.CookingRecipe;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -9,6 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCategoryModule();
+builder.Services.AddCookingRecipeModule();
 
 builder.Services.AddDbContext<FridgeDbContext>(options =>
     options.UseSqlServer(

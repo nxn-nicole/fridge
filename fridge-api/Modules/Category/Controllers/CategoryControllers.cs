@@ -7,47 +7,38 @@ namespace fridge_api.Modules.Category.Controllers;
 
 [ApiController]
 [Route("api/categories")]
-public class AddCategoryController : ControllerBase
+public class CategoryController : ControllerBase
 {
-    private readonly AddCategoryCommand _command;
+    private readonly AddCategoryCommand _addCategoryCommand;
+    private readonly GetAllCategoriesQuery _getAllCategoriesQuery;
 
-    public AddCategoryController(AddCategoryCommand command)
+    public CategoryController(AddCategoryCommand addCategoryCommand,GetAllCategoriesQuery getAllCategoriesQuery)
     {
-        _command = command;
+        _addCategoryCommand = addCategoryCommand;
+        _getAllCategoriesQuery = getAllCategoriesQuery;
     }
 
     [HttpPost]
-    public async Task<ActionResult<CategorySummary>> AddCategory(
+    public async Task<ActionResult<string>> AddCategory(
         [FromBody] AddCategoryRequest request,
         CancellationToken ct)
     {
-        if (request is null || string.IsNullOrWhiteSpace(request.Title))
+        if (request is null || string.IsNullOrWhiteSpace(request.AddCategoryDto.Title))
         {
             return BadRequest("Title is required.");
         }
 
-        var result = await _command.ExecuteAsync(request.Title, ct);
+        var result = await _addCategoryCommand.ExecuteAsync(request, ct);
         return Ok(result);
     }
-}
-
-public sealed record AddCategoryRequest(string Title);
-
-[ApiController]
-[Route("api/categories")]
-public class GetAllCategoriesController : ControllerBase
-{
-    private readonly GetAllCategoriesQuery _query;
-
-    public GetAllCategoriesController(GetAllCategoriesQuery query)
-    {
-        _query = query;
-    }
-
+    
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<CategorySummary>>> GetAll(CancellationToken ct)
+    public async Task<ActionResult<IReadOnlyList<CategoryDto>>> GetAllCategories(CancellationToken ct)
     {
-        var result = await _query.ExecuteAsync(ct);
+        var result = await _getAllCategoriesQuery.ExecuteAsync(ct);
         return Ok(result);
     }
 }
+
+
+
