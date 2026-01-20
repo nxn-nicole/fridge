@@ -5,9 +5,13 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>fridge_api</RootNamespace>
+    <EnablePreviewFeatures>true</EnablePreviewFeatures>
+    <NoWarn>$(NoWarn);OPENAI001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.AI.Projects" Version="1.2.0-beta.5" />
+    <PackageReference Include="Azure.Identity" Version="1.17.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.2">
