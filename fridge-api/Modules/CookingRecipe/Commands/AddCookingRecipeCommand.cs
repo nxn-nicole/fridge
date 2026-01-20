@@ -2,40 +2,44 @@ using System.ComponentModel.DataAnnotations;
 using fridge_api.Data;
 using fridge_api.Models;
 using fridge_api.Modules.CookingRecipe.Dtos;
+using Microsoft.Extensions.Logging;
 
 namespace fridge_api.Modules.CookingRecipe.Commands;
 
-public sealed record AddCookingRecipeRequest
+public class AddCookingRecipeRequest
 {
-    [Required] public required AddCookingReciptDto AddCookingReciptDto;
+    [Required] public required AddCookingRecipeDto AddCookingRecipeDto { get; init; }
 };
 
 
 public class AddCookingRecipeCommand
 {
     private readonly FridgeDbContext _db;
+    private readonly ILogger<AddCookingRecipeCommand> _logger;
 
-    public AddCookingRecipeCommand(FridgeDbContext db)
+    public AddCookingRecipeCommand(FridgeDbContext db, ILogger<AddCookingRecipeCommand> logger)
     {
         _db = db;
+        _logger = logger;
     }
 
     public async Task<string> ExecuteAsync(AddCookingRecipeRequest request, CancellationToken ct)
     {
-        var addCookingReciptItem = request.AddCookingReciptDto;
+        var addCookingRecipeItem = request.AddCookingRecipeDto;
+        _logger.LogInformation("Adding cooking recipe with title '{Title}'", addCookingRecipeItem.Title);
 
         var recipe = new Models.CookingRecipe
         {
-            Title = addCookingReciptItem.Title.Trim(),
+            Title = addCookingRecipeItem.Title.Trim(),
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
         };
         
-        recipe.CategoryId = addCookingReciptItem.CategoryId;
+        recipe.CategoryId = addCookingRecipeItem.CategoryId;
 
-        if (addCookingReciptItem.Ingredients is { Count: > 0 })
+        if (addCookingRecipeItem.Ingredients is { Count: > 0 })
         {
-            foreach (var ingredient in addCookingReciptItem.Ingredients)
+            foreach (var ingredient in addCookingRecipeItem.Ingredients)
             {
                 if (string.IsNullOrWhiteSpace(ingredient.Title))
                 {
@@ -52,10 +56,10 @@ public class AddCookingRecipeCommand
             }
         }
 
-        if (addCookingReciptItem.Steps is { Count: > 0 })
+        if (addCookingRecipeItem.Steps is { Count: > 0 })
         {
             
-            foreach (var step in addCookingReciptItem.Steps)
+            foreach (var step in addCookingRecipeItem.Steps)
             {
                 if (string.IsNullOrWhiteSpace(step.Description))
                 {
@@ -72,9 +76,9 @@ public class AddCookingRecipeCommand
             }
         }
 
-        if (addCookingReciptItem.PictureUrls is { Count: > 0 })
+        if (addCookingRecipeItem.PictureUrls is { Count: > 0 })
         {
-            foreach (var url in addCookingReciptItem.PictureUrls)
+            foreach (var url in addCookingRecipeItem.PictureUrls)
             {
                 if (string.IsNullOrWhiteSpace(url))
                 {
@@ -90,12 +94,13 @@ public class AddCookingRecipeCommand
 
         _db.CookingRecipes.Add(recipe);
         await _db.SaveChangesAsync(ct);
+        _logger.LogInformation("Added cooking recipe with id {RecipeId}", recipe.Id);
 
         return "Added cooking recipe successfully";
     }
 }
 
-public class AddCookingReciptDto 
+public class AddCookingRecipeDto 
 {
     public required string Title { get; init; }
     public int? CategoryId { get; init; }
@@ -118,5 +123,4 @@ public class StepInputDto
     public int Order { get; init; }
     public string? Description { get; init; }
 }
-
 

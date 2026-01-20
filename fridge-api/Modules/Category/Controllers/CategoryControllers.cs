@@ -19,21 +19,21 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<CategorySummary>> AddCategory(
+    public async Task<ActionResult<string>> AddCategory(
         [FromBody] AddCategoryRequest request,
         CancellationToken ct)
     {
-        if (request is null || string.IsNullOrWhiteSpace(request.Title))
+        if (request is null || string.IsNullOrWhiteSpace(request.AddCategoryDto.Title))
         {
             return BadRequest("Title is required.");
         }
 
-        var result = await _addCategoryCommand.ExecuteAsync(request.Title, ct);
+        var result = await _addCategoryCommand.ExecuteAsync(request, ct);
         return Ok(result);
     }
     
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<CategorySummary>>> GetAll(CancellationToken ct)
+    public async Task<ActionResult<IReadOnlyList<CategoryDto>>> GetAllCategories(CancellationToken ct)
     {
         var result = await _getAllCategoriesQuery.ExecuteAsync(ct);
         return Ok(result);

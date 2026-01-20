@@ -6,4 +6,6 @@ public class Category
 
     public string Title { get; set; } = "";
     
+    public string? Color { get; set; } = "";
+    
 }

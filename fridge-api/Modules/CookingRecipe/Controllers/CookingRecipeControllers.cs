@@ -22,7 +22,7 @@ public class CookingRecipeController : ControllerBase
         [FromBody] AddCookingRecipeRequest request,
         CancellationToken ct)
     {
-        if (request is null || string.IsNullOrWhiteSpace(request.AddCookingReciptDto.Title))
+        if (request is null || string.IsNullOrWhiteSpace(request.AddCookingRecipeDto.Title))
         {
             return BadRequest("Title is required.");
         }
@@ -51,7 +51,7 @@ public class GetRecipesByCategoryController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<CookingRecipeDto>>> GetCookingReciptsByCategory(
+    public async Task<ActionResult<IReadOnlyList<CookingRecipeDto>>> GetCookingRecipesByCategory(
         [FromQuery] int? categoryId,
         CancellationToken ct)
     {
@@ -62,17 +62,17 @@ public class GetRecipesByCategoryController : ControllerBase
 
 [ApiController]
 [Route("api/recipes/search")]
-public class SearchRecipesByTitleController : ControllerBase
+public class SearchRecipesController : ControllerBase
 {
     private readonly SearchRecipesByTitleQuery _query;
 
-    public SearchRecipesByTitleController(SearchRecipesByTitleQuery query)
+    public SearchRecipesController(SearchRecipesByTitleQuery query)
     {
         _query = query;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<CookingRecipeDto>>> SearchCookingRecipt(
+    public async Task<ActionResult<IReadOnlyList<CookingRecipeDto>>> SearchCookingRecipesByTitle(
         [FromQuery] string? title,
         CancellationToken ct)
     {

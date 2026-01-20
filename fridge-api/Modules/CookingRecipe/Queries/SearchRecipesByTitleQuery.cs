@@ -2,20 +2,24 @@ using fridge_api.Data;
 using fridge_api.Models;
 using fridge_api.Modules.CookingRecipe.Dtos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace fridge_api.Modules.CookingRecipe.Queries;
 
 public class SearchRecipesByTitleQuery
 {
     private readonly FridgeDbContext _db;
+    private readonly ILogger<SearchRecipesByTitleQuery> _logger;
 
-    public SearchRecipesByTitleQuery(FridgeDbContext db)
+    public SearchRecipesByTitleQuery(FridgeDbContext db, ILogger<SearchRecipesByTitleQuery> logger)
     {
         _db = db;
+        _logger = logger;
     }
 
     public async Task<List<CookingRecipeDto>> ExecuteAsync(string? title, CancellationToken ct)
     {
+        _logger.LogInformation("Searching recipes by title '{Title}'", title);
         IQueryable<Models.CookingRecipe> query = _db.CookingRecipes.AsNoTracking();
 
         if (!string.IsNullOrWhiteSpace(title))
@@ -25,7 +29,7 @@ public class SearchRecipesByTitleQuery
 
        
 
-        return await query
+        var result = await query
             .OrderBy(recipe => recipe.Title)
             .Select(recipe => new CookingRecipeDto
             {
@@ -62,6 +66,8 @@ public class SearchRecipesByTitleQuery
                     .ToList()
             })
             .ToListAsync(ct);
+        _logger.LogInformation("Search by title '{Title}' returned {Count} recipes", title, result.Count);
+        return result;
 
     }
 }
@@ -78,4 +84,3 @@ public class CookingRecipeDto
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }
-
