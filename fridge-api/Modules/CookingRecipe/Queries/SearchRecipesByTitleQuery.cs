@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using fridge_api.Data;
 using fridge_api.Models;
 using fridge_api.Modules.CookingRecipe.Dtos;
@@ -5,6 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace fridge_api.Modules.CookingRecipe.Queries;
+
+public class SearchRecipesByTitleRequest
+{
+    public string Title { get; set; }
+    [Required] public Guid UserId { get; set; }
+}
 
 public class SearchRecipesByTitleQuery
 {
@@ -17,14 +24,15 @@ public class SearchRecipesByTitleQuery
         _logger = logger;
     }
 
-    public async Task<List<CookingRecipeDto>> ExecuteAsync(string? title, CancellationToken ct)
+    public async Task<List<CookingRecipeDto>> ExecuteAsync(SearchRecipesByTitleRequest request, CancellationToken ct)
     {
-        _logger.LogInformation("Searching recipes by title '{Title}'", title);
-        IQueryable<Models.CookingRecipe> query = _db.CookingRecipes.AsNoTracking();
+        _logger.LogInformation("Searching recipes for user {UserId} by title '{Title}'", request.UserId, request.Title);
+        IQueryable<Models.CookingRecipe> query = _db.CookingRecipes.AsNoTracking()
+            .Where(recipe => recipe.UserId == request.UserId);
 
-        if (!string.IsNullOrWhiteSpace(title))
+        if (!string.IsNullOrWhiteSpace(request.Title))
         {
-            query = query.Where(recipe => recipe.Title.Contains(title.Trim()));
+            query = query.Where(recipe => recipe.Title.Contains(request.Title.Trim()));
         }
 
        
@@ -66,7 +74,11 @@ public class SearchRecipesByTitleQuery
                     .ToList()
             })
             .ToListAsync(ct);
-        _logger.LogInformation("Search by title '{Title}' returned {Count} recipes", title, result.Count);
+        _logger.LogInformation(
+            "Search by title '{Title}' for user {UserId} returned {Count} recipes",
+            request.Title,
+            request.UserId,
+            result.Count);
         return result;
 
     }

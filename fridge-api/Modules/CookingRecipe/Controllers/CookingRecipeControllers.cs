@@ -1,11 +1,13 @@
 using fridge_api.Modules.CookingRecipe.Commands;
 using fridge_api.Modules.CookingRecipe.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace fridge_api.Modules.CookingRecipe.Controllers;
 
 [ApiController]
 [Route("api/recipes")]
+[Authorize]
 public class CookingRecipeController : ControllerBase
 {
     private readonly AddCookingRecipeCommand _addCookingRecipeCommand;
@@ -19,13 +21,22 @@ public class CookingRecipeController : ControllerBase
 
     [HttpPost]
     public async Task<ActionResult<string>> AddCookingRecipe(
-        [FromBody] AddCookingRecipeRequest request,
+        [FromBody] AddCookingRecipeDto newCookingRecipe,
         CancellationToken ct)
     {
-        if (request is null || string.IsNullOrWhiteSpace(request.AddCookingRecipeDto.Title))
+        
+        if (!HttpContext.Items.TryGetValue("UserId", out var userIdObj) || userIdObj is not Guid userId)
+            throw new UnauthorizedAccessException("Could not find valid user id from Http Context");
+        if (string.IsNullOrWhiteSpace(newCookingRecipe.Title))
         {
             return BadRequest("Title is required.");
         }
+
+        var request = new AddCookingRecipeRequest
+        {
+            AddCookingRecipeDto = newCookingRecipe,
+            UserId = userId
+        };
 
         var result = await _addCookingRecipeCommand.ExecuteAsync(request, ct);
         return Ok(result);
@@ -34,13 +45,21 @@ public class CookingRecipeController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteCookingRecipe([FromRoute] int id, CancellationToken ct)
     {
-        var deleted = await _deleteCookingRecipeCommand.ExecuteAsync(id, ct);
+        if (!HttpContext.Items.TryGetValue("UserId", out var userIdObj) || userIdObj is not Guid userId)
+            throw new UnauthorizedAccessException("Could not find valid user id from Http Context");
+        var request = new DeleteCookingRecipeRequest
+        {
+            RecipeId = id,
+            UserId = userId,
+        };
+        var deleted = await _deleteCookingRecipeCommand.ExecuteAsync(request, ct);
         return deleted ? NoContent() : NotFound();
     }
 }
 
 [ApiController]
 [Route("api/recipes/by-category")]
+[Authorize]
 public class GetRecipesByCategoryController : ControllerBase
 {
     private readonly GetRecipesByCategoryQuery _query;
@@ -55,13 +74,23 @@ public class GetRecipesByCategoryController : ControllerBase
         [FromQuery] int? categoryId,
         CancellationToken ct)
     {
-        var result = await _query.ExecuteAsync(categoryId, ct);
+        if (!HttpContext.Items.TryGetValue("UserId", out var userIdObj) || userIdObj is not Guid userId)
+        throw new UnauthorizedAccessException("Could not find valid user id from Http Context");
+
+        var request = new GetRecipesByCategoryRequest
+        {
+            CategoryId = categoryId,
+            UserId = userId,
+        };
+        
+        var result = await _query.ExecuteAsync(request, ct);
         return Ok(result);
     }
 }
 
 [ApiController]
 [Route("api/recipes/search")]
+[Authorize]
 public class SearchRecipesController : ControllerBase
 {
     private readonly SearchRecipesByTitleQuery _query;
@@ -76,8 +105,16 @@ public class SearchRecipesController : ControllerBase
         [FromQuery] string? title,
         CancellationToken ct)
     {
-        var result = await _query.ExecuteAsync(title, ct);
+        if (!HttpContext.Items.TryGetValue("UserId", out var userIdObj) || userIdObj is not Guid userId)
+            throw new UnauthorizedAccessException("Could not find valid user id from Http Context");
+
+        var request = new SearchRecipesByTitleRequest
+        {
+            Title = title ?? string.Empty,
+            UserId = userId
+        };
+
+        var result = await _query.ExecuteAsync(request, ct);
         return Ok(result);
     }
 }
-

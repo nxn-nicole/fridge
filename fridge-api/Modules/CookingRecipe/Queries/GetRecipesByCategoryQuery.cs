@@ -1,9 +1,16 @@
+using System.ComponentModel.DataAnnotations;
 using fridge_api.Data;
 using fridge_api.Modules.CookingRecipe.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace fridge_api.Modules.CookingRecipe.Queries;
+
+public class GetRecipesByCategoryRequest
+{
+    public int? CategoryId { get; set; } 
+    [Required] public Guid UserId { get; set; }
+}
 
 public class GetRecipesByCategoryQuery
 {
@@ -16,14 +23,15 @@ public class GetRecipesByCategoryQuery
         _logger = logger;
     }
 
-    public async Task<IReadOnlyList<CookingRecipeDto>> ExecuteAsync(int? categoryId, CancellationToken ct)
+    public async Task<IReadOnlyList<CookingRecipeDto>> ExecuteAsync(GetRecipesByCategoryRequest request, CancellationToken ct)
     {
-        _logger.LogInformation("Fetching recipes by category {CategoryId}", categoryId);
-        var query = _db.CookingRecipes.AsNoTracking();
+        _logger.LogInformation("Fetching recipes for user {UserId} by category {CategoryId}", request.UserId, request.CategoryId);
+        var query = _db.CookingRecipes.AsNoTracking()
+            .Where(recipe => recipe.UserId == request.UserId);
 
-        if (categoryId is not null)
+        if (request.CategoryId is not null)
         {
-            query = query.Where(recipe => recipe.CategoryId == categoryId);
+            query = query.Where(recipe => recipe.CategoryId == request.CategoryId);
         }
 
         var result = await query
@@ -63,8 +71,11 @@ public class GetRecipesByCategoryQuery
                     .ToList()
             })
             .ToListAsync(ct);
-        _logger.LogInformation("Fetched {Count} recipes for category {CategoryId}", result.Count, categoryId);
+        _logger.LogInformation(
+            "Fetched {Count} recipes for user {UserId} and category {CategoryId}",
+            result.Count,
+            request.UserId,
+            request.CategoryId);
         return result;
     }
 }
-

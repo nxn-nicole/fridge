@@ -8,4 +8,7 @@ public class Category
     
     public string? Color { get; set; } = "";
     
+    public required Guid UserId { get; set; }
+    public AppUser User { get; set; } = null!;
+    
 }
