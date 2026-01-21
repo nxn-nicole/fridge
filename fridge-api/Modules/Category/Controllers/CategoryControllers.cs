@@ -46,10 +46,12 @@ public class CategoryController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<CategoryDto>>> GetAllCategories(CancellationToken ct)
     {
-        var result = await _getAllCategoriesQuery.ExecuteAsync(ct);
+        if (!HttpContext.Items.TryGetValue("UserId", out var userIdObj) || userIdObj is not Guid userId)
+            throw new UnauthorizedAccessException("Could not find valid user id from Http Context");
+
+        var result = await _getAllCategoriesQuery.ExecuteAsync(userId, ct);
         return Ok(result);
     }
 }
-
 
 

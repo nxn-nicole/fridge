@@ -16,11 +16,12 @@ public class GetAllCategoriesQuery
         _logger = logger;
     }
 
-    public async Task<IReadOnlyList<CategoryDto>> ExecuteAsync(CancellationToken ct)
+    public async Task<IReadOnlyList<CategoryDto>> ExecuteAsync(Guid userId, CancellationToken ct)
     {
-        _logger.LogInformation("Start getting all cooking recipes");
+        _logger.LogInformation("Fetching categories for user {UserId}", userId);
         var result = await _db.Categories
             .AsNoTracking()
+            .Where(category => category.UserId == userId)
             .OrderBy(category => category.Title)
             .Select(category => new CategoryDto
             {
@@ -29,7 +30,7 @@ public class GetAllCategoriesQuery
                 Color = category.Color,
             })
             .ToListAsync(ct);
-        _logger.LogInformation("Fetched {Count} categories", result.Count);
+        _logger.LogInformation("Fetched {Count} categories for user {UserId}", result.Count, userId);
         return result;
     }
 }

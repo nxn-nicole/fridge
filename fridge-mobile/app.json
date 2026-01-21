@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "fridge-mobile",
+    "slug": "fridge-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.fridgeapp.fridge-mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false
+    },
+    "plugins": [
+      [
+        "react-native-auth0",
+        {
+          "domain": "{yourDomain}"
+        }
+      ],
+      "expo-router",
+      "expo-secure-store"
+    ]
+  }
+}
