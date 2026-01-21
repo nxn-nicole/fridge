@@ -37,7 +37,7 @@ export default function GetStartedButton() {
   };
 
   return (
-    <Pressable onPress={onPress} className="px-4 py-2 bg-blue-500 rounded">
+    <Pressable onPress={onPress} className="px-4 py-2 bg-blue-500 rounded w-40">
       <Text>Get Started</Text>
     </Pressable>
   );

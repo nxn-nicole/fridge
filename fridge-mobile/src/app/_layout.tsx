@@ -1,3 +1,4 @@
+import "../../global.css";
 import { View, Text } from "react-native";
 import React from "react";
 import { Auth0Provider } from "react-native-auth0";
