@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Auth0.AspNetCore.Authentication.Api;
 using fridge_api.Data;
 using fridge_api.Modules.AIRecipeGeneration.Services;
@@ -6,6 +7,7 @@ using fridge_api.Modules.CookingRecipe;
 using fridge_api.Modules.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +18,10 @@ builder.Services.AddAuth0ApiAuthentication(options =>
     options.JwtBearerOptions = new JwtBearerOptions
     {
         Audience = builder.Configuration["Auth0:Audience"],
-       
+        TokenValidationParameters = new TokenValidationParameters
+        {
+            NameClaimType = ClaimTypes.NameIdentifier
+        },
     };
 });
 
@@ -59,6 +64,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<UserContextMiddleware>();
 
 app.MapControllers();
 

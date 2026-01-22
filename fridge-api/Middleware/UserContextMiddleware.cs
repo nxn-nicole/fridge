@@ -15,7 +15,8 @@ public class UserContextMiddleware
     {
         if (context.User.Identity?.IsAuthenticated == true)
         {
-            var auth0Sub = context.User.FindFirst("sub")?.Value;
+            var auth0Sub = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
 
             if (string.IsNullOrWhiteSpace(auth0Sub))
             {
