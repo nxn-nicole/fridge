@@ -32,13 +32,16 @@ export default function GetStartedButton() {
         console.error("No access token received from Auth0");
       }
     } catch (e) {
-      console.error("Auth0 authorization error:", e);
+      console.error("Authentication error:", e);
     }
   };
 
   return (
-    <Pressable onPress={onPress} className="px-4 py-2 bg-blue-500 rounded w-40">
-      <Text>Get Started</Text>
+    <Pressable
+      onPress={onPress}
+      className="p-4 bg-[#D6B6DA] rounded-xl w-64 items-center"
+    >
+      <Text className="text-black text-xl font-bold">Get Started</Text>
     </Pressable>
   );
 }
