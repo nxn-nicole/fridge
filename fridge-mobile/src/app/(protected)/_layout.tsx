@@ -9,6 +9,7 @@ const ProtectedLayout = (props: Props) => {
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="add-recipe" options={{ headerShown: false }} />
       <Stack.Screen name="ai-recipe" options={{ headerShown: false }} />
+      <Stack.Screen name="profile" options={{ headerShown: false }} />
     </Stack>
   );
 };

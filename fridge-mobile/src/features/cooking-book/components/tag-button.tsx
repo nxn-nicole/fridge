@@ -14,13 +14,13 @@ type Props = {
 };
 
 const TagButton = ({ title, color, selected = false, onPress }: Props) => {
-  const width = useSharedValue(56);
+  const width = useSharedValue(40);
 
   useEffect(() => {
     if (selected) {
-      width.value = withTiming(64, { duration: 180 });
+      width.value = withTiming(50, { duration: 180 });
     } else {
-      width.value = withTiming(56, { duration: 180 });
+      width.value = withTiming(40, { duration: 180 });
     }
   }, [selected, width]);
 
