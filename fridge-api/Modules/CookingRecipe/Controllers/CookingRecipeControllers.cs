@@ -70,7 +70,7 @@ public class GetRecipesByCategoryController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<CookingRecipeDto>>> GetCookingRecipesByCategory(
+    public async Task<ActionResult<IReadOnlyList<CookingRecipeSummaryDto>>> GetCookingRecipesByCategory(
         [FromQuery] int? categoryId,
         CancellationToken ct)
     {
@@ -101,7 +101,7 @@ public class SearchRecipesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<CookingRecipeDto>>> SearchCookingRecipesByTitle(
+    public async Task<ActionResult<IReadOnlyList<CookingRecipeSummaryDto>>> SearchCookingRecipesByTitle(
         [FromQuery] string? title,
         CancellationToken ct)
     {

@@ -13,7 +13,7 @@ type Props = {
   onPress?: () => void;
 };
 
-const TagButton = ({ title, color, selected = false, onPress }: Props) => {
+const CategoryButton = ({ title, color, selected = false, onPress }: Props) => {
   const width = useSharedValue(40);
 
   useEffect(() => {
@@ -47,4 +47,4 @@ const TagButton = ({ title, color, selected = false, onPress }: Props) => {
   );
 };
 
-export default TagButton;
+export default CategoryButton;

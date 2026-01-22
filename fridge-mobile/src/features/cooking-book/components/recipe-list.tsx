@@ -1,10 +1,10 @@
 import React from "react";
 import { View } from "react-native";
 import RecipeCard from "./recipe-card";
-import type { RecipeItemDto } from "../models/recipe-item.dto";
+import type { RecipeItemSummaryDto } from "../models/recipe-item-summary-dto";
 
 type Props = {
-  items: RecipeItemDto[];
+  items: RecipeItemSummaryDto[];
 };
 
 const RecipeList = ({ items }: Props) => {
@@ -14,7 +14,7 @@ const RecipeList = ({ items }: Props) => {
         <RecipeCard
           key={item.id}
           title={item.title}
-          picture={item.picture}
+          picture={item.pictureUrl}
           description={item.description}
         />
       ))}
