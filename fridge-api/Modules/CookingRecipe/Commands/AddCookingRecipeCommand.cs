@@ -9,6 +9,7 @@ namespace fridge_api.Modules.CookingRecipe.Commands;
 public class AddCookingRecipeRequest
 {
     [Required] public required AddCookingRecipeDto AddCookingRecipeDto { get; init; }
+    [Required] public Guid UserId { get; init; }
 };
 
 
@@ -33,6 +34,7 @@ public class AddCookingRecipeCommand
             Title = addCookingRecipeItem.Title.Trim(),
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
+            UserId = request.UserId,
         };
         
         recipe.CategoryId = addCookingRecipeItem.CategoryId;

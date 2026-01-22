@@ -14,6 +14,9 @@ public class CookingRecipe
     public Category? Category { get; set; }
 
     public ICollection<RecipePicture> Pictures { get; set; } = new List<RecipePicture>();
+    
+    public required Guid UserId { get; set; }
+    public AppUser User { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

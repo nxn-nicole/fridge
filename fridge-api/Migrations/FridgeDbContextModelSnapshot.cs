@@ -22,6 +22,53 @@ namespace fridge_api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("fridge_api.Models.AppUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Auth0UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LastSeenAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PictureUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("718ccb8f-ce52-4e51-8cfe-2a44cdca77d1"),
+                            Auth0UserId = "auth0|6970222c95b87153189ea217",
+                            CreatedAt = new DateTime(2026, 1, 9, 14, 34, 27, 575, DateTimeKind.Utc),
+                            Email = "fridgetest@gmail.com",
+                            LastSeenAt = new DateTime(2026, 1, 9, 14, 33, 27, 955, DateTimeKind.Utc),
+                            Name = "fridgeTestAccount",
+                            PictureUrl = "https://s.gravatar.com/avatar/93e67547c4a33f19a557e2a3ddbe6c28?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Ffr.png",
+                            UpdatedAt = new DateTime(2026, 1, 9, 14, 34, 27, 575, DateTimeKind.Utc)
+                        });
+                });
+
             modelBuilder.Entity("fridge_api.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -30,11 +77,19 @@ namespace fridge_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Categories");
                 });
@@ -60,9 +115,14 @@ namespace fridge_api.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("CookingRecipes");
                 });
@@ -147,13 +207,32 @@ namespace fridge_api.Migrations
                     b.ToTable("RecipeSteps");
                 });
 
+            modelBuilder.Entity("fridge_api.Models.Category", b =>
+                {
+                    b.HasOne("fridge_api.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("fridge_api.Models.CookingRecipe", b =>
                 {
                     b.HasOne("fridge_api.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId");
 
+                    b.HasOne("fridge_api.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Category");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("fridge_api.Models.IngredientItem", b =>

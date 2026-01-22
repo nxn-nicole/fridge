@@ -8,6 +8,7 @@ namespace fridge_api.Modules.Category.Commands;
 public class AddCategoryRequest
 {
     public required AddCategoryDto AddCategoryDto { get; set; }
+    public required Guid UserId { get; set; }
 }
 
 public class AddCategoryCommand
@@ -31,6 +32,7 @@ public class AddCategoryCommand
         {
             Title = normalizedTitle,
             Color = addCategoryDto.Color,
+            UserId = addCategoryRequest.UserId,
         };
 
         _db.Categories.Add(category);
