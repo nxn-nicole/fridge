@@ -60,32 +60,30 @@ const CategoryButton = ({
   });
 
   return (
-    <View className="relative">
-      <Animated.View style={animatedStyle} className="relative overflow-visible">
-        <View className="overflow-hidden">
-          <Pressable
-            onPress={onPress}
-            onLongPress={deleteCategory}
-            className={`items-center justify-center rounded-tr-md rounded-br-md py-4 -ml-3 ${
-              selected
-                ? "border-t-2 border-r-2 border-b-2 border-black"
-                : "border border-transparent"
-            }`}
-            style={{ backgroundColor: color }}
-          >
-            <Text className="text-base font-semibold text-black">{title}</Text>
-          </Pressable>
-        </View>
-        {showDelete ? (
-          <Pressable
-            onPress={onDeletePress}
-            className="absolute -right-1 -top-2 z-10 h-6 w-6 items-center justify-center rounded-full bg-red-500"
-          >
-            <Ionicons name="close" size={12} color={"#fff"} />
-          </Pressable>
-        ) : null}
-      </Animated.View>
-    </View>
+    <Animated.View style={animatedStyle} className="relative overflow-visible">
+      <View className="overflow-hidden">
+        <Pressable
+          onPress={onPress}
+          onLongPress={deleteCategory}
+          className={`items-center justify-center rounded-tr-md rounded-br-md py-4 ${
+            selected
+              ? "border-t-2 border-r-2 border-b-2 border-black"
+              : "border border-transparent"
+          }`}
+          style={{ backgroundColor: color }}
+        >
+          <Text className="text-base font-semibold text-black">{title}</Text>
+        </Pressable>
+      </View>
+      {showDelete ? (
+        <Pressable
+          onPress={onDeletePress}
+          className="absolute -right-1 -top-2 z-10 h-6 w-6 items-center justify-center rounded-full bg-red-500"
+        >
+          <Ionicons name="close" size={12} color={"#fff"} />
+        </Pressable>
+      ) : null}
+    </Animated.View>
   );
 };
 
