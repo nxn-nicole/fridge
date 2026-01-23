@@ -13,11 +13,16 @@ public class CategoryController : ControllerBase
 {
     private readonly AddCategoryCommand _addCategoryCommand;
     private readonly GetAllCategoriesQuery _getAllCategoriesQuery;
+    private readonly DeleteCategoryCommand _deleteCategoryCommand;
 
-    public CategoryController(AddCategoryCommand addCategoryCommand,GetAllCategoriesQuery getAllCategoriesQuery)
+    public CategoryController(
+        AddCategoryCommand addCategoryCommand,
+        GetAllCategoriesQuery getAllCategoriesQuery,
+        DeleteCategoryCommand deleteCategoryCommand)
     {
         _addCategoryCommand = addCategoryCommand;
         _getAllCategoriesQuery = getAllCategoriesQuery;
+        _deleteCategoryCommand = deleteCategoryCommand;
     }
 
     [HttpPost]
@@ -52,6 +57,27 @@ public class CategoryController : ControllerBase
         var result = await _getAllCategoriesQuery.ExecuteAsync(userId, ct);
         return Ok(result);
     }
-}
 
+    [HttpDelete("{categoryId:int}")]
+    public async Task<IActionResult> DeleteCategory(int categoryId, CancellationToken ct)
+    {
+        if (!HttpContext.Items.TryGetValue("UserId", out var userIdObj) || userIdObj is not Guid userId)
+            throw new UnauthorizedAccessException("Could not find valid user id from Http Context");
+
+        var deleted = await _deleteCategoryCommand.ExecuteAsync(
+            new DeleteCategoryRequest
+            {
+                CategoryId = categoryId,
+                UserId = userId,
+            },
+            ct);
+
+        if (!deleted)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
+}
 

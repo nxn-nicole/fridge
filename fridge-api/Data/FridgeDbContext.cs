@@ -12,6 +12,7 @@ public class FridgeDbContext: DbContext
     public DbSet<IngredientItem> IngredientItems { get; set; }
     public DbSet<CookingRecipe> CookingRecipes { get; set; } = null!;
     public DbSet<Category> Categories { get; set; } = null!;
+    public DbSet<AiChatHistory> AiChatHistories { get; set; } = null!;
     
     public DbSet<RecipeStep> RecipeSteps { get; set; } = null!;
     

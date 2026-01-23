@@ -9,6 +9,7 @@ public static class DependencyInjection
     public static IServiceCollection AddCategoryModule(this IServiceCollection services)
     {
         services.AddScoped<AddCategoryCommand>();
+        services.AddScoped<DeleteCategoryCommand>();
         services.AddScoped<GetAllCategoriesQuery>();
 
         return services;

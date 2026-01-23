@@ -8,3 +8,7 @@ export const recipeKeys = {
     ["recipes", "category", categoryId ?? "all"] as const,
   search: (title: string) => ["recipes", "search", title] as const,
 } as const;
+
+export const aiChatHistoryKeys = {
+  all: ["ai-chat-history"] as const,
+} as const;

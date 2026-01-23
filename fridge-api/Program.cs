@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Auth0.AspNetCore.Authentication.Api;
 using fridge_api.Data;
-using fridge_api.Modules.AIRecipeGeneration.Services;
+using fridge_api.Modules.AIRecipeGeneration;
 using fridge_api.Modules.Category;
 using fridge_api.Modules.CookingRecipe;
 using fridge_api.Modules.User;
@@ -33,7 +33,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCategoryModule();
 builder.Services.AddCookingRecipeModule();
 builder.Services.AddUserModule();
-builder.Services.AddScoped<AIRecipeGenerationService>();
+builder.Services.AddAIRecipeGenerationModule();
 
 builder.Services.AddDbContext<FridgeDbContext>(options =>
     options.UseSqlServer(
