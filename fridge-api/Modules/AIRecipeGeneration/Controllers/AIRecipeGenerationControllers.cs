@@ -16,15 +16,24 @@ public class AIRecipeGenerationControllers : ControllerBase
 
     [HttpPost]
     public async Task<ActionResult<AIGeneratedRecipe>> Generate(
-        [FromBody] RawRecipeTextDto request,
+        [FromBody] string rawUserMessage,
         CancellationToken ct)
     {
-        if (request is null || string.IsNullOrWhiteSpace(request.Text))
+        if (!HttpContext.Items.TryGetValue("UserId", out var userIdObj) || userIdObj is not Guid userId)
+            throw new UnauthorizedAccessException("Could not find valid user id from Http Context");
+
+        if (string.IsNullOrWhiteSpace(rawUserMessage))
         {
             return BadRequest("Text is required.");
         }
 
-        var result = await _service.Generate(request, ct);
+        var result = await _service.Generate(
+            new AiGenerateRecipeRequest
+            {
+                UserId = userId,
+                RawUserMessage = rawUserMessage,
+            },
+            ct);
         return Ok(result);
     }
 }
