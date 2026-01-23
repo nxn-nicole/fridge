@@ -20,7 +20,7 @@ const ALL_CATEGORY_ID = "all";
 
 const defaultCategory = {
   title: "",
-  color: "#D6B6DA",
+  color: "",
 };
 
 const RecipePanel = ({ categories }: Props) => {

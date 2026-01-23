@@ -6,7 +6,7 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { Controller, type Control } from "react-hook-form";
+import { Controller, type Control, useWatch } from "react-hook-form";
 import type { AddCategoryDto } from "../models/add-category-dto";
 import ColorPalette from "./color-palette";
 import Modal from "react-native-modal";
@@ -28,6 +28,10 @@ const AddCategoryForm = ({
   onClose,
   onSubmit,
 }: Props) => {
+  const title = useWatch({ control, name: "title" });
+  const color = useWatch({ control, name: "color" });
+  const isDisabled = isAddingCategory || !title?.trim() || !color || !isValid;
+
   return (
     <Modal
       isVisible={isVisible}
@@ -66,8 +70,9 @@ const AddCategoryForm = ({
         <View className="mt-4 flex-row items-center justify-end ">
           <Pressable
             onPress={onSubmit}
-            className="min-w-[92px] items-center justify-center rounded-full bg-primary px-4 py-2"
-            disabled={isAddingCategory || !isValid}
+            className="min-w-[92px] items-center justify-center rounded-full px-4 py-2"
+            style={{ backgroundColor: isDisabled ? "#9CA3AF" : "#D8D2C4" }}
+            disabled={isDisabled}
           >
             {isAddingCategory ? (
               <ActivityIndicator size="small" color="#FFFFFF" />
