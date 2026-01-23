@@ -7,7 +7,10 @@ import AddCategoryForm from "./add-category-form";
 import RecipeList from "./recipe-list";
 import type { CategoryDto } from "../models/category-dto";
 import { useRecipesByCategory } from "../hooks/useRecipeQuery";
-import { useAddCategory } from "../hooks/useCategoryMuatation";
+import {
+  useAddCategory,
+  useDeleteCategory,
+} from "../hooks/useCategoryMuatation";
 import { addCategorySchema } from "../models/add-category-schema";
 import { AddCategoryDto } from "../models/add-category-dto";
 import { Ionicons } from "@expo/vector-icons";
@@ -33,6 +36,7 @@ const RecipePanel = ({ categories }: Props) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [deleteCategoryId, setDeleteCategoryId] = useState<string | null>(null);
   const { addCategory, isAddingCategory } = useAddCategory();
+  const { deleteCategory, isDeleteingCategory } = useDeleteCategory();
 
   const {
     control,
@@ -82,6 +86,19 @@ const RecipePanel = ({ categories }: Props) => {
     reset(defaultCategory);
   };
 
+  const handleDeleteCategory = (categoryId: number) => {
+    console.log("deleting category id:", categoryId);
+    if (isDeleteingCategory) {
+      return;
+    }
+
+    deleteCategory(categoryId, {
+      onSuccess: () => {
+        setDeleteCategoryId(null);
+      },
+    });
+  };
+
   return (
     <View
       className="flex-row mt-6 mr-6"
@@ -107,7 +124,10 @@ const RecipePanel = ({ categories }: Props) => {
               )
             }
             deleteCategory={() => setDeleteCategoryId(category.id.toString())}
-            onDeletePress={() => console.log("Delete category:", category.id)}
+            onDeletePress={() => {
+              handleDeleteCategory(category.id);
+              console.log("start delete");
+            }}
           />
         ))}
         <Pressable

@@ -77,8 +77,9 @@ const CategoryButton = ({
       </View>
       {showDelete ? (
         <Pressable
-          onPress={onDeletePress}
+          onPressIn={onDeletePress}
           className="absolute -right-1 -top-2 z-10 h-6 w-6 items-center justify-center rounded-full bg-red-500"
+          hitSlop={8}
         >
           <Ionicons name="close" size={12} color={"#fff"} />
         </Pressable>

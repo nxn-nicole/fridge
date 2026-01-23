@@ -21,3 +21,11 @@ export const addCategory = async (data: AddCategoryDto): Promise<string> => {
     throw new Error("Failed to add category.");
   }
 };
+
+export const deleteCategory = async (categoryId: number): Promise<void> => {
+  try {
+    await apiClient.delete(`${CATEGORY_URL}/${categoryId}`);
+  } catch {
+    throw new Error("Failed to delete category.");
+  }
+};
