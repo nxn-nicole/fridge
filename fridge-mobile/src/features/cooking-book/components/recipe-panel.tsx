@@ -31,6 +31,7 @@ const RecipePanel = ({ categories }: Props) => {
 
   const [activeCategory, setActiveCategory] = useState(ALL_CATEGORY_ID);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [deleteCategoryId, setDeleteCategoryId] = useState<string | null>(null);
   const { addCategory, isAddingCategory } = useAddCategory();
 
   const {
@@ -49,6 +50,18 @@ const RecipePanel = ({ categories }: Props) => {
 
   const handleOpenAddCategory = () => {
     setIsAddModalOpen(true);
+  };
+
+  const handleDismissDelete = () => {
+    if (!deleteCategoryId) {
+      return false;
+    }
+
+    setTimeout(() => {
+      setDeleteCategoryId(null);
+    }, 0);
+
+    return false;
   };
 
   const handleSubmitAddCategory = (data: AddCategoryDto) => {
@@ -70,13 +83,17 @@ const RecipePanel = ({ categories }: Props) => {
   };
 
   return (
-    <View className="flex-row mt-6 mr-6">
+    <View
+      className="flex-row mt-6 mr-6"
+      onStartShouldSetResponderCapture={handleDismissDelete}
+    >
       <View className="w-16 gap-4">
         {allCategories.map((category) => (
           <CategoryButton
             key={`${category.id}-${category.title}`}
             title={category.title}
             color={category.color ?? "#FFFFF"}
+            showDelete={deleteCategoryId === category.id.toString()}
             selected={
               category.title === "All"
                 ? activeCategory === ALL_CATEGORY_ID
@@ -89,6 +106,8 @@ const RecipePanel = ({ categories }: Props) => {
                   : category.id.toString(),
               )
             }
+            deleteCategory={() => setDeleteCategoryId(category.id.toString())}
+            onDeletePress={() => console.log("Delete category:", category.id)}
           />
         ))}
         <Pressable

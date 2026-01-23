@@ -32,12 +32,12 @@ const ProtectedIndex = (props: Props) => {
       <View className="flex-row items-center justify-between pb-4 mx-6">
         <Pressable
           onPress={() => router.push("/(protected)/ai-recipe")}
-          className="flex-row items-center gap-2 rounded-full border-2 border-primary bg-[#FEF8BE] px-5 py-3"
+          className="flex-row items-center gap-2 rounded-full bg-primary px-5 py-3"
         >
-          <Text className="text-base font-semibold text-primary">
+          <Text className="text-base font-semibold text-white">
             Describe Your Dish
           </Text>
-          <FontAwesome5 name="utensils" size={16} color="#54462B" />
+          <FontAwesome5 name="utensils" size={16} color="#fff" />
         </Pressable>
         <Pressable
           onPress={() => router.push("/(protected)/add-recipe")}

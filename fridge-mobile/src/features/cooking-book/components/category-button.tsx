@@ -1,5 +1,6 @@
+import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect } from "react";
-import { Pressable, Text } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -11,9 +12,20 @@ type Props = {
   color: string;
   selected?: boolean;
   onPress?: () => void;
+  deleteCategory?: () => void;
+  showDelete?: boolean;
+  onDeletePress?: () => void;
 };
 
-const CategoryButton = ({ title, color, selected = false, onPress }: Props) => {
+const CategoryButton = ({
+  title,
+  color,
+  selected = false,
+  onPress,
+  deleteCategory,
+  showDelete = false,
+  onDeletePress,
+}: Props) => {
   const width = useSharedValue(40);
 
   useEffect(() => {
@@ -31,9 +43,10 @@ const CategoryButton = ({ title, color, selected = false, onPress }: Props) => {
   });
 
   return (
-    <Animated.View style={animatedStyle}>
+    <Animated.View style={animatedStyle} className="relative">
       <Pressable
         onPress={onPress}
+        onLongPress={deleteCategory}
         className={`items-center justify-center rounded-tr-md rounded-br-md py-4 ${
           selected
             ? "border-t-2 border-r-2 border-b-2 border-black"
@@ -43,6 +56,14 @@ const CategoryButton = ({ title, color, selected = false, onPress }: Props) => {
       >
         <Text className="text-base font-semibold text-black">{title}</Text>
       </Pressable>
+      {showDelete ? (
+        <Pressable
+          onPress={onDeletePress}
+          className="absolute -right-2 -top-2 h-6 w-6 items-center justify-center rounded-full bg-red-500"
+        >
+          <Ionicons name="close" size={12} color={"#fff"} />
+        </Pressable>
+      ) : null}
     </Animated.View>
   );
 };

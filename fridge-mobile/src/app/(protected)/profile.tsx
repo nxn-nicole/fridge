@@ -10,10 +10,10 @@ const ProfileScreen = (props: Props) => {
   const router = useRouter();
 
   return (
-    <SafeAreaView style={{ flex: 1 }} className="bg-[#FFFDE7]">
+    <SafeAreaView style={{ flex: 1 }} className="bg-background">
       <View className="px-6 pt-4">
         <Pressable
-          onPress={() => router.push("/(protected)")}
+          onPress={() => router.back()}
           className="h-10 w-10 items-center justify-center rounded-full border border-[#54462B] bg-[#FEF8BE]"
         >
           <Feather name="arrow-left" size={20} color="#54462B" />
