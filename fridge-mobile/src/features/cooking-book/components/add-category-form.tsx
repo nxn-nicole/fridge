@@ -71,7 +71,7 @@ const AddCategoryForm = ({
           <Pressable
             onPress={onSubmit}
             className="min-w-[92px] items-center justify-center rounded-full px-4 py-2"
-            style={{ backgroundColor: isDisabled ? "#9CA3AF" : "#D8D2C4" }}
+            style={{ backgroundColor: isDisabled ? "#9CA3AF" : "#54462B" }}
             disabled={isDisabled}
           >
             {isAddingCategory ? (

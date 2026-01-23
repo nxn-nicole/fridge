@@ -77,6 +77,7 @@ const RecipePanel = ({ categories }: Props) => {
     addCategory(data, {
       onSuccess: () => {
         setIsAddModalOpen(false);
+        reset(defaultCategory);
       },
     });
   };
@@ -110,23 +111,30 @@ const RecipePanel = ({ categories }: Props) => {
             key={`${category.id}-${category.title}`}
             title={category.title}
             color={category.color ?? "#FFFFF"}
-            showDelete={deleteCategoryId === category.id.toString()}
+            showDelete={
+              category.id !== 0 && deleteCategoryId === category.id.toString()
+            }
             selected={
-              category.title === "All"
+              category.id === 0
                 ? activeCategory === ALL_CATEGORY_ID
                 : category.id.toString() === activeCategory
             }
             onPress={() =>
               setActiveCategory(
-                category.title === "All"
-                  ? ALL_CATEGORY_ID
-                  : category.id.toString(),
+                category.id === 0 ? ALL_CATEGORY_ID : category.id.toString(),
               )
             }
-            deleteCategory={() => setDeleteCategoryId(category.id.toString())}
+            deleteCategory={() => {
+              if (category.id === 0) {
+                return;
+              }
+              setDeleteCategoryId(category.id.toString());
+            }}
             onDeletePress={() => {
+              if (category.id === 0) {
+                return;
+              }
               handleDeleteCategory(category.id);
-              console.log("start delete");
             }}
           />
         ))}
